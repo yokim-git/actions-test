@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set Tag name
+        run: TAGS=`date +%H:%M:%S`
       - name: docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-          DOCKER_TAGS: `date +%y.%m.%d`
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Build the Docker image
-        run: docker build . --file ./Dockerfile --tag yokimhub/node:$DOCKER_TAGS
+        run: docker build . --file ./Dockerfile --tag yokimhub/node:$TAGS
       - name: Docker Push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:$DOCKER_TAGS
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:$TAGS
