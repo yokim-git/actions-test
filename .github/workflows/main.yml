@@ -11,14 +11,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set Tag name
-        run: echo "TAGS=`date +%H%M%S`" >> $GITHUB_ENV
+        run: |
+          ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+          echo "TAGS=`date +%H%M%S`" >> $GITHUB_ENV
+
       - name: docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
       - name: Build the Docker image
         run: docker build . --file ./Dockerfile --tag yokimhub/node:${{ env.TAGS }}
+
       - name: Docker Push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:${{ env.TAGS }}
