@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set Tag name
-        run: echo "TAGS=`date +%H:%M:%S`" >> $GITHUB_ENV
+        run: echo "TAGS=`date +%H%M%S`" >> $GITHUB_ENV
       - name: docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
