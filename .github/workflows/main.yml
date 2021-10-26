@@ -18,7 +18,7 @@ jobs:
       with:
         image: yokimhub/node
         tags: v1
-        registry: hub.docker.com
+        registry: docker.io
         dockerfile: ./Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
