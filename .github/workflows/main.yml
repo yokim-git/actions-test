@@ -14,9 +14,10 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKER_TAGS: `date +%y.%m.%d`
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Build the Docker image
-        run: docker build . --file ./Dockerfile --tag yokimhub/node:$(date +%y.%m.%d)
+        run: docker build . --file ./Dockerfile --tag yokimhub/node:$DOCKER_TAGS
       - name: Docker Push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:$DOCKER_TAGS
