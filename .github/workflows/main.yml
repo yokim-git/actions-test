@@ -18,7 +18,7 @@ jobs:
           docker login -u $username -p $password
 
       - name: Build the Docker image
-        run: docker build . --file ./Dockerfile --tag yokimhub/node:$(date +%y.%m.%d\ %H:%M)
+        run: docker build . --file ./Dockerfile --tag yokimhub/node:$(date +%y.%m.%d)
 
       - name: Docker Push
-        run: docker push $username/node:$(date +%y.%m.%d\ %H:%M)
+        run: docker push $username/node:$(date +%y.%m.%d)
