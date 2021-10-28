@@ -10,8 +10,8 @@ on:
 
 # 해당 Workflow의 하나 이상의 Job 목록
 jobs:
-  # Job 이름으로, build라는 이름으로 Job이 표시
-  build:
+  # Job 이름으로, cicd라는 이름으로 Job이 표시
+  cicd:
     # Runner가 실행되는 환경을 정의하는 부분 (여기선 Ubuntu 사용)
     runs-on: ubuntu-latest
     # build Job 내의 step 목록
@@ -40,14 +40,7 @@ jobs:
       - name: Docker Push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:${{ env.TAGS }}
 
-  # ArgoCD 배포를 위해 kubernetes rollout object 수정하는 부분
-  deploy:
-    # build Job이 선행되어야 해당 deploy Job 실행되는 설정
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
+      # 빌드된 도커 이미지를 ArgoCD 에 적용하기 위해 kubernetes rollout object 수정
       - name: git clone and edit
         env:
           GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
