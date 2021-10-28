@@ -41,7 +41,7 @@ jobs:
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:${{ env.TAGS }}
 
       # 빌드된 도커 이미지를 ArgoCD 에 적용하기 위해 kubernetes rollout object 수정
-      - name: git clone and edit
+      - name: deploy
         env:
           GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
           GIT_USER_PASSWORD: ${{ secrets.GIT_USER_PASSWORD }}
@@ -49,7 +49,7 @@ jobs:
         run: |
           git clone https://$GIT_USER_NAME:$GIT_USER_PASSWORD@github.com/yokim-git/helmtest.git && cd helmtest/pping-dev
           git config --global user.email $GIT_USER_EMAIL; git config --global user.name $GIT_USER_NAME ; git config --global push.default matching
-          sed -i 's/demo:.*/demo:'$TAGS'/g' rollout.yaml
+          sed -i 's/demo:.*/demo:green/g' rollout.yaml
           if [ -z "$(git status --porcelain)" ]; \
             then \
               echo "nothing to commit, working directory clean"; \
