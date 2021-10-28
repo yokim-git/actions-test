@@ -34,12 +34,12 @@ jobs:
           GIT_USER_PASSWORD: ${{ secrets.GIT_USER_PASSWORD }}
           GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
         run: |
-          - git clone https://$GIT_USER_NAME:$GIT_USER_PASSWORD@github.com/yokim-git/helmtest.git && cd helmtest/pping-dev
-          - git config --global user.email $GIT_USER_EMAIL; git config --global user.name $GIT_USER_NAME ; git config --global push.default matching
-          - sed -i 's/demo:.*/demo:blue/g' rollout.yaml
-          - if [ -z "$(git status --porcelain)" ];
-            then
-              echo "nothing to commit, working directory clean";
-            else
-              git commit -am "actions test"  && git push;
+          git clone https://$GIT_USER_NAME:$GIT_USER_PASSWORD@github.com/yokim-git/helmtest.git && cd helmtest/pping-dev
+          git config --global user.email $GIT_USER_EMAIL; git config --global user.name $GIT_USER_NAME ; git config --global push.default matching
+          sed -i 's/demo:.*/demo:blue/g' rollout.yaml
+          if [ -z "$(git status --porcelain)" ]; \
+            then \
+              echo "nothing to commit, working directory clean"; \
+            else \
+              git commit -am "actions test"  && git push; \
             fi
