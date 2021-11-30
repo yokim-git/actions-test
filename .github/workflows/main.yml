@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
           echo "TAGS=`date +%H%M%S`" >> $GITHUB_ENV
-          echo "VERSION=blue" >> $GITHUB_ENV
+          echo "VERSION=green" >> $GITHUB_ENV
 
       # docker hub 로그인, 변수는 github Settings 페이지에서 설정 가능
       - name: docker login
