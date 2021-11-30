@@ -24,6 +24,7 @@ jobs:
         run: |
           sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
           echo "TAGS=`date +%H%M%S`" >> $GITHUB_ENV
+          echo "VERSION=red" >> $GITHUB_ENV
 
       # docker hub 로그인, 변수는 github Settings 페이지에서 설정 가능
       - name: docker login
@@ -34,11 +35,16 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       # Docker Image 빌드 및 푸쉬 단계
-      - name: Build the Docker image
-        run: docker build . --file ./Dockerfile --tag yokimhub/node:${{ env.TAGS }}
+      #- name: Build the Docker image
+      #  run: docker build . --file ./Dockerfile --tag yokimhub/node:${{ env.TAGS }}
 
-      - name: Docker Push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:${{ env.TAGS }}
+      #- name: Docker Push
+      #  run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/node:${{ env.TAGS }}
+      - name: Pull and Push
+        run: |
+          docker pull argoproj/rollouts-demo:${{ env.VERSION }}
+          docker image tag argoproj/rollouts-demo:${{ env.VERSION }} ${{ secrets.DOCKERHUB_USERNAME }}/rollouts-demo:${{ env.TAGS }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/rollouts-demo:${{ env.TAGS }}
 
       # 빌드된 도커 이미지를 ArgoCD 에 적용하기 위해 kubernetes rollout object 수정
       - name: deploy
@@ -47,9 +53,9 @@ jobs:
           GIT_USER_PASSWORD: ${{ secrets.GIT_USER_PASSWORD }}
           GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
         run: |
-          git clone https://$GIT_USER_NAME:$GIT_USER_PASSWORD@github.com/yokim-git/helmtest.git && cd helmtest/pping-dev
+          git clone https://$GIT_USER_NAME:$GIT_USER_PASSWORD@github.com/yokim-git/helm.git && cd helm/test_resources
           git config --global user.email $GIT_USER_EMAIL; git config --global user.name $GIT_USER_NAME ; git config --global push.default matching
-          sed -i 's/demo:.*/demo:green/g' rollout.yaml
+          sed -i 's/version:.*/version:${{ env.TAGS }}/g' values.yaml
           if [ -z "$(git status --porcelain)" ]; \
             then \
               echo "nothing to commit, working directory clean"; \
